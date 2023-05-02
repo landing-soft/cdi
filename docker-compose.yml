@@ -1,0 +1,56 @@
+services:
+  restapi:
+#    image: jamie111111/rest3
+    build: .
+    ports:
+      - "9080:9081"
+    environment:
+      - postgres.hostname=postgres
+    networks:
+      - postgres
+
+  frontend:
+    image: jamie111111/frontlatest
+    ports:
+      - "8081:8081"
+
+  postgres:
+#    image: postgres
+    build:
+      context: /
+      dockerfile: DockerfilePostgres
+    container_name: dbcontacts
+
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - 5432:5432
+    networks:
+      - postgres
+
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: contacts
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:

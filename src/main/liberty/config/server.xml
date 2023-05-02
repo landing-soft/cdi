@@ -1,0 +1,43 @@
+<server description="ConfigurationLiberty server">
+
+    <featureManager>
+      <feature>microProfile-5.0</feature>
+    </featureManager>
+
+    <variable name="default.http.port" defaultValue="9081"/>
+    <variable name="default.https.port" defaultValue="9444"/>
+    <variable name="database.servername" defaultValue="localhost"/>
+    <variable name="database.port" defaultValue="5432"/>
+    <variable name="database.user" defaultValue="rootuser"/>
+    <variable name="database.password" defaultValue="root"/>
+    <variable name="database.name" defaultValue="testdb"/>
+
+
+
+    <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
+                  id="defaultHttpEndpoint" host="*"/>
+
+    <webApplication location="cdi.war" contextRoot="/">
+
+    </webApplication>
+
+    <library id="postgresql-library">
+        <fileset dir="${shared.resource.dir}/" includes="*.jar"/>
+    </library>
+
+    <dataSource id="postgresql" jndiName="jdbc/postgresql">
+        <jdbcDriver libraryRef="postgresql-library"/>
+        <properties.postgresql databaseName="${database.name}"
+                               serverName="${database.servername}"
+                               portNumber="${database.port}"
+                               user="${database.user}"
+                               password="${database.password}"/>
+    </dataSource>
+
+    <!--  <cors domain="/"-->
+    <!--        allowedOrigins="*"-->
+    <!--        allowedMethods="GET, DELETE, POST, PUT"-->
+    <!--        allowedHeaders="origin, content-type, accept, authorization, cache-control"-->
+    <!--        maxAge="3600" />-->
+
+</server>
